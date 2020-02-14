@@ -71,6 +71,17 @@ headerbar *, button * {
   -gtk-icon-shadow: none;
 }
 
+// Leave border-color of headerbar buttons evenly colored
+// But darken the border-color a little bit to keep legibility
+// This is consistent with the "default theme"
+headerbar, .titlebar {
+  stackswitcher button:checked,
+    button.toggle:checked {
+      border-color: darken($borders_color, 6%);
+      border-top-color: darken($borders_color, 6%);
+    }
+  }
+
 // blue spinner
 spinner {
   &:not(:backdrop) {
@@ -267,22 +278,6 @@ button {
   row:selected & { outline-color: $coloured_focus_border_color; }
 
   &.suggested-action, &.destructive-action{ &, &:hover, &:active { outline-color: $coloured_focus_border_color; } }
-
-  messagedialog .dialog-action-area & {
-    &:first-child:not(:only-child) {
-      -gtk-outline-bottom-left-radius: $button_radius + 3;
-      -gtk-outline-top-left-radius: 0px;
-      -gtk-outline-top-right-radius: 0px;
-      -gtk-outline-bottom-right-radius: 0px;
-    }
-
-    &:last-child:not(:only-child) {
-      -gtk-outline-bottom-right-radius: $button_radius + 3;
-      -gtk-outline-top-right-radius: 0px;
-      -gtk-outline-bottom-left-radius: 0px;
-      -gtk-outline-top-left-radius: 0px;
-    }
-  }
 }
 
 switch {
@@ -727,3 +722,8 @@ rubberband {
 // Fix for color chose buttons, should be moved to upstream as it is variable
 // If the min-height is not set, it stretches compact headerbars
 button.color { min-height: $_headerbar_height / 2; }
+// Entries drown if drawn on widgets with $base_color
+// Fixing this at least for notebooks, since entries on tabs is a common pattern
+@if $variant=='dark' {
+  notebook entry { background-color: darken($base_color, 2%); }
+}
